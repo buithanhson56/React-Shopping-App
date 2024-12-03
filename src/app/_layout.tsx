@@ -1,4 +1,5 @@
 
+import CartProvider from '@/provider/CartProvider';
 import { useColorScheme } from '@hooks/useColorScheme.web';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -29,10 +30,14 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+      <CartProvider>
+        <Stack>
+          <Stack.Screen name="(user)" options={{ headerShown: false }} />
+          <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+          <Stack.Screen name="cart" options={{ presentation: 'containedModal' }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </CartProvider>
+    </ThemeProvider >
   );
 }
