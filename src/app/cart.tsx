@@ -1,4 +1,4 @@
-import { Text, View, FlatList } from 'react-native'
+import { Text, View, FlatList, StyleSheet } from 'react-native'
 import React, { Component, useState } from 'react'
 import { useCart } from '@/provider/CartProvider';
 import CartListItem from '@components/CartListItem';
@@ -8,27 +8,25 @@ import CustomModal from './modal';
 
 
 const CartScreen = () => {
-    const { items } = useCart();
+    const { items, total } = useCart();
     const [modalVisible, setModalVisible] = useState(false);
-    console.log(items);
     return (
         <View>
             <FlatList
                 data={items}
                 renderItem={({ item }) => <CartListItem cartItem={item} />}
-                contentContainerStyle={{ padding: 10, gap: 10 }}
+                contentContainerStyle={{ gap: 10 }}
             />
-            <Button text="Open Modal" onPress={() => setModalVisible(true)} />
+            <Text style={styles.totalPrice}>Total price : {total}</Text>
+            <Button text="Check out" onPress={() => setModalVisible(true)} />
 
-            <CustomModal
-                visible={modalVisible}
-                onClose={() => setModalVisible(false)}
-                title="Welcome"
-            >
-                <Text>This is a reusable modal component.</Text>
-            </CustomModal>
 
         </View>
     );
 }
 export default CartScreen;
+const styles = StyleSheet.create({
+    totalPrice: {
+
+    }
+})

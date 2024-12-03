@@ -6,12 +6,14 @@ type CartType = {
     items: CartItem[],
     addItems: (product: Product, size: CartItem['size']) => void;
     updateQuantity: (itemId: string, amount: -1 | 1) => void;
+    total: number,
 }
 
 const CartContext = createContext<CartType>({
     items: [],
     addItems: () => { },
     updateQuantity: () => { },
+    total: 0
 });
 
 const CartProvider = ({ children }: PropsWithChildren) => {
@@ -35,20 +37,18 @@ const CartProvider = ({ children }: PropsWithChildren) => {
         };
         //check already in cart
         const checkExsistItem = items.find(x => x.product == product && x.size == size)
-        console.log("Exist item", checkExsistItem);
         if (checkExsistItem) {
             updateQuantity(checkExsistItem.id, 1)
             return;
         }
-        console.log(newCartItem);
         setItems([newCartItem, ...items]);
         console.warn(items.length);
     };
 
     //update quantity
-
+    const total = items.reduce((sum, item) => sum += (item.product.price * item.quantity), 0);
     return (
-        <CartContext.Provider value={{ items, addItems, updateQuantity }}>
+        <CartContext.Provider value={{ items, addItems, updateQuantity, total }}>
             {children}
         </CartContext.Provider>
     );

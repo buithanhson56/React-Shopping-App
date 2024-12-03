@@ -34,7 +34,6 @@ const ProductDetailScreen = () => {
                     <Pressable
                         onPress={() => {
                             setSelectedSize(size);
-                            console.log(setSelectedSize);
                         }}
                         key={size}
                         style={[styles.size, {
