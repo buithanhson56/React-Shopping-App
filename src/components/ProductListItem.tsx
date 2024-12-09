@@ -7,14 +7,15 @@ type ProductListItemProps = {
     product: Product
 }
 
+
 const ProductListItem = ({ product }: ProductListItemProps) => {
+    const DefaultImagePizza = 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/peperoni.png';
     const segment = useSegments();
-    console.log(segment);
 
     return (
         <Link href={`/${segment[0]}/menu/${product.id}`} asChild>
             <Pressable style={styles.container} >
-                <Image source={{ uri: product.image ?? "" }}
+                <Image source={{ uri: product?.image || DefaultImagePizza }}
                     style={styles.image}
                     resizeMode="contain"
                 >

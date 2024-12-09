@@ -7,7 +7,7 @@ export default function MenuLayout() {
         <Stack
             screenOptions={{
                 headerRight: () => (
-                    <Link href="/" asChild>
+                    <Link href="/(admin)/menu/create" asChild>
                         <FontAwesome
                             name="plus-square-o"
                             size={25}
