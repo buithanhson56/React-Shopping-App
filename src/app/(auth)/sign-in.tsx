@@ -1,14 +1,25 @@
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import React, { useState } from 'react';
 import Button from '@components/Button';
 
 import { Link, Stack } from 'expo-router';
 import { Colors } from '@constants/Colors';
 import Checkbox from 'expo-checkbox';
+import { supabase } from '@/lib/supabase';
 const SignInScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+    async function signInWithEmail() {
+        setLoading(true);
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error)
+            Alert.alert(error.message);
+        console.warn("Sign in success");
+        setLoading(false);
+    }
+
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ title: 'Sign in' }} />
@@ -36,7 +47,7 @@ const SignInScreen = () => {
                 </Checkbox>
                 <Text style={styles.checkboxLabel}>Show/hide password</Text>
             </View>
-            <Button text="Sign in" />
+            <Button disabled={loading} onPress={signInWithEmail} text={loading ? "Is logging ..." : "Sign in"} />
             <Link href="/sign-up" style={styles.textButton}>
                 Create an account
             </Link>
