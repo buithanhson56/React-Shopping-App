@@ -18,7 +18,7 @@ const ProductDetailScreen = () => {
     const [selectedSize, setSelectedSize] = useState<PizzaSize>('M');
     const product = products.find(x => x.id.toString() == id);
     const { addItems } = useCart();
-    console.log(`/(admin)/menu/create/id=${id}`);
+
     const addToCart = () => {
         if (!product)
             return;

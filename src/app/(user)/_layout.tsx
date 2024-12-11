@@ -27,11 +27,12 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="explore"
+        name="order"
         options={{
-          title: 'Explore',
+          title: 'Orders',
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <TabBarIcon name={focused ? 'list' : 'list-outline'} color={color} />
           ),
         }}
       />
