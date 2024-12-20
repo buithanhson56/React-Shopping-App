@@ -1,8 +1,7 @@
 import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import React, { useState } from 'react';
 import Button from '@components/Button';
-
-import { Link, Stack } from 'expo-router';
+import { Link, Redirect, router, Stack } from 'expo-router';
 import { Colors } from '@constants/Colors';
 import Checkbox from 'expo-checkbox';
 import { supabase } from '@/lib/supabase';
@@ -14,10 +13,13 @@ const SignInScreen = () => {
     async function signInWithEmail() {
         setLoading(true);
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error)
+        if (error) {
             Alert.alert(error.message);
+        }
         console.warn("Sign in success");
         setLoading(false);
+        router.replace('/');
+
     }
 
     return (
@@ -51,6 +53,10 @@ const SignInScreen = () => {
             <Link href="/sign-up" style={styles.textButton}>
                 Create an account
             </Link>
+            <Button onPress={() => {
+                router.replace('/');
+            }} text="Back to main" />
+
         </View>
     );
 };
