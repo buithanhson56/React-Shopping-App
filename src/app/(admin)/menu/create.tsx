@@ -1,19 +1,32 @@
 import { View, Text, StyleSheet, TextInput, Image, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '@components/Button';
 import { Colors } from '@constants/Colors';
 import * as ImagePicker from 'expo-image-picker';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useDeleteProduct, useInsertProduct, useProduct, useUpdateProduct } from '@/api/products';
 
 const CreateProductScreen = () => {
     const defaultImagePizza = 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/peperoni.png';
-    const { id } = useLocalSearchParams();
+    const { id: idString } = useLocalSearchParams();
     const [error, setError] = useState('');
+    const id = parseFloat(typeof idString == 'string' ? idString : idString[0]);
+    const isUpdating = id > 0;
+    const { data } = useProduct(id);
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [image, setImage] = useState('');
+    const { mutate: insertProduct } = useInsertProduct();
+    const { mutate: updateProduct } = useUpdateProduct();
+    const { mutate: deleteProduct } = useDeleteProduct();
 
-    const isUpdating = !!id;
+    useEffect(() => {
+        if (isUpdating) {
+            setPrice(data.price.toString());
+            setImage(data.image);
+            setName(data.name);
+        }
+    }, [isUpdating]);
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -22,7 +35,6 @@ const CreateProductScreen = () => {
             aspect: [4, 3],
             quality: 1,
         });
-        console.log(result);
         if (!result.canceled) {
             setImage(result.assets[0].uri);
         }
@@ -54,12 +66,40 @@ const CreateProductScreen = () => {
             return;
         };
         //Save in database and blank fields
-        console.warn('Create product!');
-        resetField();
+        insertProduct({ name, price: parseFloat(price), image }, {
+            onSuccess: () => {
+                resetField();
+                console.warn('Create product!');
+                router.back();
+            }
+        });
+    }
 
+
+    const onUpdate = () => {
+        console.log("update work>");
+        if (!validateInput()) {
+            console.warn(error);
+            return;
+        };
+        //Save in database and blank fields
+        updateProduct({ id, name, price: parseFloat(price), image },
+            {
+                onSuccess: () => {
+                    resetField();
+                    console.warn('Updated product');
+                    router.back();
+                }
+            });
     }
 
     const onDelete = () => {
+        deleteProduct((id), {
+            onSuccess: () => {
+                console.warn('Updated product');
+                router.replace('/(admin)/menu');
+            }
+        })
         console.warn("Deleted");
     }
 
@@ -78,7 +118,7 @@ const CreateProductScreen = () => {
     }
     const onSubmit = () => {
         if (isUpdating) {
-
+            onUpdate();
         }
         else {
             onCreate();

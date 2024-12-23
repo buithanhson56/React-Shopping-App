@@ -1,6 +1,7 @@
 
 import AuthProvider from '@/provider/AuthProvider';
 import CartProvider from '@/provider/CartProvider';
+import QueryProvider from '@/provider/QueryProvider';
 import { useColorScheme } from '@hooks/useColorScheme.web';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -32,15 +33,17 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthProvider>
-        <CartProvider>
-          <Stack>
-            <Stack.Screen name="(user)" options={{ headerShown: false }} />
-            <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="cart" options={{ presentation: 'containedModal' }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        </CartProvider>
+        <QueryProvider>
+          <CartProvider>
+            <Stack>
+              <Stack.Screen name="(user)" options={{ headerShown: false }} />
+              <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="cart" options={{ presentation: 'containedModal' }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </CartProvider>
+        </QueryProvider>
       </AuthProvider>
     </ThemeProvider >
   );
